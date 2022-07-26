@@ -8,7 +8,8 @@ services:
       - './App/:/app'
     ports:
       - "8082:8082"
-    entrypoint: "sleep 1000"
+    entrypoint: "sleep 10000"
+
   jenkins:
     build:
       context: .

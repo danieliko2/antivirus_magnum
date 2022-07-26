@@ -98,7 +98,6 @@ resource "aws_security_group" "allow_web" {
   }
 }
 
-
 resource "aws_network_interface" "web-server-nic" {
 
   subnet_id       = aws_subnet.subnet-1.id
@@ -114,11 +113,12 @@ resource "aws_eip" "one" {
   depends_on                = [aws_internet_gateway.gw]
 }
 
-resource "aws_instance" "av_ci_ec2" {
+
+resource "aws_instance" "av_deployment_server" {
     ami           = "ami-065deacbcaac64cf2"
     instance_type = "t2.micro"
     availability_zone = "eu-central-1c"
-    key_name = "main-pair"
+    key_name      = "main-pair"
 
     network_interface {
         device_index = 0
@@ -144,15 +144,11 @@ resource "aws_instance" "av_ci_ec2" {
                   echo ========== pulling images ==========
                   cd tar
                   tag=$(cat tagcnf)
-                  sudo docker pull 644435390668.dkr.ecr.eu-central-1.amazonaws.com/lavagna_backend:$tag
-                  sudo docker pull 644435390668.dkr.ecr.eu-central-1.amazonaws.com/lavanga_sql:$tag
-                  sudo docker pull 644435390668.dkr.ecr.eu-central-1.amazonaws.com/lavagna_proxy:$tag
-                  sudo docker pull 644435390668.dkr.ecr.eu-central-1.amazonaws.com/lavagna_documentation:$tag
+                  sudo docker pull --image-repo--
                   echo ========== building app ==========
                   sudo env_tag=$tag docker-compose up --build
                   EOF
     tags = {
         Name = "ec2_ubuntu"
     }
-
 }

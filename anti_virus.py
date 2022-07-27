@@ -1,25 +1,7 @@
 import csv
-import selenium
-import time
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from scapy.all import *
+from scapy.layers.inet import IP
 
-
-# browser = webdriver.Firefox(executable_path="drivers/geckodriver")
-# wait = WebDriverWait(browser, 3)
-# visible = EC.visibility_of_element_located
-
-def testPage(page):
-    browser.get(page)
-    wait.until(visible((By.ID, "video-title")))
-    browser.find_element_by_id("video-title").click()
-    browser.minimize_window()
-    time.sleep(7)
-    browser.quit()
-
-# testPage("http://www.google.com")
 
 def print_me(me):
     print(me)
@@ -36,3 +18,15 @@ def get_ips():
         csvRead = csv.reader(f)
         rows = list(csvRead)
         return rows
+
+def listen_traffic():
+    ips = get_ips()
+    print("listening traffic on 192.168.1.20")
+    def analyze_pkt(pkt):
+        src_ip = pkt[IP].src
+        for ip in ips:
+            if ip[0] == src_ip:
+                print("found ip: " + str(ip))
+
+    sniff(filter="ip dst 192.168.1.20", prn=analyze_pkt)
+    

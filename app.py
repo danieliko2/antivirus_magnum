@@ -1,13 +1,9 @@
 from doctest import testmod
 from flask import Flask
 from flask import render_template, request, jsonify
-from anti_virus import print_me, add_ip, testPage, get_ips
+from anti_virus import print_me, add_ip, listen_traffic, get_ips
 from scapy.all import *
-import selenium
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+
 
 app = Flask(__name__)
 
@@ -18,8 +14,7 @@ def hello_world():
 @app.route("/listen", methods=['GET', 'POST'])
 def listen():
     if request.method == 'POST':
-        webURL = request.form['webURL']
-        testPage(webURL)
+        listen_traffic()
     return render_template("listen.html")
 
 @app.route("/config", methods=['GET', 'POST'])

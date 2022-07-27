@@ -22,15 +22,52 @@
     <div class="h- 100"></div>
     <div class="h-100 d-flex align-items-center justify-content-center">
         <div style="background: aquamarine; height: 300px; width: 230px; padding: 5px; border:2px; border-color: black; border-style:solid;">
+            <p><b>Listen to web traffic</b></p>
             <form id = "listen_form" method="post">
-                <p>Insert web page: </p>
-                <p>in dev</p><br>
-                <input name="webURL" id="webURL" type="text" placeholder="https://www.google.com" required>
-                <input type="submit" value="Submit">
+                <input type="submit" value="Listen">
             </form>
             <br>
             <a href="/">home</a>
             <a href="config">config</a>
+        </div>
+        <div class="overflow-auto"style="background: aquamarine; height: 300px; width: 350px; padding: 5px; border:2px; border-color: black; border-style:solid;">
+            <p>ips found:</p>
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">IP#</th>
+                    <th scope="col">Risk Factor</th>
+                    <th scope="col">Info</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">192.196.20.1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">2</th>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>Larry</td>
+                    <td>the Bird</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>Larry</td>
+                    <td>the Bird</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>Larry</td>
+                    <td>the Bird</td>
+                  </tr>
+                </tbody>
+              </table>
         </div>
     </div>
 </body>

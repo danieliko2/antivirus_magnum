@@ -2,6 +2,7 @@ from doctest import testmod
 from flask import Flask
 from flask import render_template, request, jsonify
 from anti_virus import print_me, add_ip, listen_traffic, get_ips
+from anti_virus import foundips
 from scapy.all import *
 
 
@@ -15,7 +16,8 @@ def hello_world():
 def listen():
     if request.method == 'POST':
         listen_traffic()
-    return render_template("listen.html")
+    ips = get_ips()
+    return render_template("listen.html", IPS=ips) # currently showing all ips
 
 @app.route("/config", methods=['GET', 'POST'])
 def config():

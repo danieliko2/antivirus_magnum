@@ -2,6 +2,7 @@ import csv
 from scapy.all import *
 from scapy.layers.inet import IP
 
+foundips=[]
 
 def print_me(me):
     print(me)
@@ -27,6 +28,7 @@ def listen_traffic():
         for ip in ips:
             if ip[0] == src_ip:
                 print("found ip: " + str(ip))
+                foundips.append(ip)
 
     sniff(filter="ip dst 192.168.1.20", prn=analyze_pkt)
     

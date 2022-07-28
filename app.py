@@ -5,6 +5,7 @@ from anti_virus import print_me, add_ip, listen_traffic, get_ips
 from anti_virus import foundips
 from scapy.all import *
 
+## start with sudo flask run!
 
 app = Flask(__name__)
 

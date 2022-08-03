@@ -28,14 +28,12 @@ services:
     container_name: gitlab
     image: 'gitlab/gitlab-ce:14.7.7-ce.0'
     hostname: 'gitlab'
-    environment:
-      - GITLAB_HOME=/srv/gitlab
     ports:
       - '80:80'
     volumes:
-      - '$GITLAB_HOME/config:/etc/gitlab'
-      - '$GITLAB_HOME/logs:/var/log/gitlab'
-      - '$GITLAB_HOME/data:/var/opt/gitlab'
+      - '/srv/gitlab/config:/etc/gitlab'
+      - '/srv/gitlab/logs:/var/log/gitlab'
+      - '/srv/gitlab/data:/var/opt/gitlab'
     shm_size: '256m'
 
 volumes:

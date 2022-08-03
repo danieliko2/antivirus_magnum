@@ -3,11 +3,7 @@ from flask import Flask
 from flask import render_template, request, jsonify
 from anti_virus import print_me, add_ip
 from scapy.all import *
-import selenium
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+
 
 app = Flask(__name__)
 

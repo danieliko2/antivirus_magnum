@@ -17,6 +17,7 @@ pipeline {
             steps {
                 sh 'cd App'
                 sh 'sudo flask run'
+                
             }
         }
         // stage ('Test - master') {

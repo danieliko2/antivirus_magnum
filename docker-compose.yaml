@@ -20,6 +20,8 @@ services:
       - '/var/run/docker.sock:/var/run/docker.sock'
       - 'jenkins_home:/var/jenkins_home'
       - './App/:/av_folder'
+      - './keys:/root/.ssh'
+      - './keys:/mykeys'
     ports:
       - 8080:8080
       - 50000:50000
@@ -30,6 +32,7 @@ services:
     hostname: 'gitlab'
     ports:
       - '80:80'
+      - '22:22'
     volumes:
       - '/srv/gitlab/config:/etc/gitlab'
       - '/srv/gitlab/logs:/var/log/gitlab'

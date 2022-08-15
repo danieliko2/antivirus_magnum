@@ -1,7 +1,7 @@
 pipeline {
 
     agent {
-        docker { image 'python:3' }
+        docker { image 'python:3.9-alpine3.15' }
     }
 
     stages {
@@ -27,9 +27,14 @@ pipeline {
             //     beforeOptions true
             // }
             steps {
-                sh 'cd App'
-                sh 'export FLASK_APP=app'
-                sh 'flask run'
+                
+                sh script:'''
+                  #!/bin/bash
+                  echo "This is start $(pwd)"
+                  cd ./App
+                  echo "This is $(pwd)"
+                  python3 -m flask run
+                '''
                 
             }
         }

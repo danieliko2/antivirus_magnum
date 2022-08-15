@@ -28,7 +28,7 @@ pipeline {
             // }
             steps {
                 sh 'cd App'
-                sh 'sudo flask run'
+                sh 'flask run'
                 
             }
         }

@@ -3,7 +3,7 @@ pipeline {
     agent {
         docker { image 'python:3' }
     }
-    
+
     stages {
         stage ('Hello'){
             steps {
@@ -13,7 +13,7 @@ pipeline {
 
         stage ('Build') {
             steps {
-                sh 'pip install flask'
+                sh 'sudo pip install flask'
                 sh 'echo "ab"'
             }
         }

@@ -6,8 +6,8 @@ pipeline {
 
     stages {
         stage ('Hello'){
-            steps {
-                sh 'echo "Hello!"'
+            withEnv(["HOME=${env.WORKSPACE}"]) {
+                    sh 'echo "Hello!"'
             }
         }
 

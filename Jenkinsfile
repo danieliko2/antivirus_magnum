@@ -6,15 +6,17 @@ pipeline {
 
     stages {
         stage ('Hello'){
-            withEnv(["HOME=${env.WORKSPACE}"]) {
-                    sh 'echo "Hello!"'
+            steps {
+                sh 'echo "Hello!"'
             }
         }
 
         stage ('Build') {
             steps {
-                sh 'pip3 install flask --user'
-                sh 'echo "ab"'
+                withEnv(["HOME=${env.WORKSPACE}"]) {
+                    sh 'pip3 install flask'
+                    sh 'echo "ab"'
+                }
             }
         }
         stage ('Test') {

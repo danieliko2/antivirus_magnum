@@ -1,10 +1,22 @@
 pipeline {
-    agent any
+
+    agent {
+        docker { image 'python:3.9-alpine3.15' }
+    }
+
     stages {
+        stage ('Hello'){
+            steps {
+                sh 'echo "Hello!"'
+            }
+        }
 
         stage ('Build') {
             steps {
-                sh 'pip install flask'
+                withEnv(["HOME=${env.WORKSPACE}"]) {
+                    sh 'pip3 install flask'
+                    sh 'echo "ab"'
+                }
             }
         }
         stage ('Test') {
@@ -15,8 +27,15 @@ pipeline {
             //     beforeOptions true
             // }
             steps {
-                sh 'cd App'
-                sh 'sudo flask run'
+                
+                sh script:'''
+                  #!/bin/bash
+                  echo "This is start $(pwd)"
+                  cd ./App
+                  echo "This is $(pwd)"
+                  python3 -m flask run
+                '''
+                
             }
         }
         // stage ('Test - master') {
@@ -54,7 +73,7 @@ pipeline {
             echo 'failed to finish'
         }
         success{
-            'build success'
+            echo 'build success'
         }
     }
 }

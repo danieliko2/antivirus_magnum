@@ -28,6 +28,7 @@ pipeline {
             // }
             steps {
                 sh 'cd App'
+                sh 'export FLASK_APP=app'
                 sh 'flask run'
                 
             }

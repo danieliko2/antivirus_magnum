@@ -1,34 +1,41 @@
 from flask import Flask
 from flask import render_template, request, jsonify, get_template_attribute, Response, stream_with_context, render_template_string
-from anti_virus import print_me, add_ip, listen_traffic, get_ips
+from anti_virus import add_ip, get_ips
 from scapy.all import *
+from scapy.layers.inet import IP
 from testing import jinja2_render_test
+from turbo_flask import Turbo
+import threading
 
 ## start with sudo flask run!
 
 app = Flask(__name__)
+turbo = Turbo(app)
+
+found_ips = []
+
+@app.context_processor  
+def inject_load():
+    return {'IPS': found_ips}
+
+# @app.before_first_request
+# def before_first_request():
+    # threading.Thread(target=start_sniff).start()
+
 
 @app.route("/")
 def hello_world():
     return render_template("home.html")
 
+
 @app.route("/listen", methods=['GET', 'POST'])
 def listen():
     if request.method == 'POST':
-        listen_traffic()
-    return render_template("listen.html", IPS=[]) # currently showing all ips
+        start_sniff()
+    return render_template("listen.html") # currently showing all ipsm
 
 @app.route("/config", methods=['GET', 'POST'])
 def config():
-    if request.is_json:
-        text = request.args.get('test_text')
-        return jsonify({'ip':'100.10.10.1'})
-
-    # if request.is_json and request.id == "getIP":
-    #     ipA = request.args.get('ipAdr')
-    #     riskN = request.args.get('')
-    #     return jsonify({'ip':'100.10.10.1'})
-
     if request.method == 'POST':
         ipA = request.form['ipAdr']
         riskN = request.form['riskN']
@@ -44,50 +51,28 @@ def list_ips():
     ips = get_ips()
     print(ips)
     return (str(ips))
-    # return('test')
 
-def printer(ip):
-    print_me("me!#")
+def analyze_pkt(pkt):
+    src_ip = pkt[IP].src
+    ips = get_ips()
+    found = False
+    for ip in ips:
+        if ip[0] == src_ip:
+            for foundip in found_ips:
+                if foundip[0] == src_ip:
+                    found = True
+                    break
 
-@app.route("/testing", methods=['GET', 'POST'])
-def testing():
-    if request.method == 'POST':
-        # return(jinja2_render_test())
-        def print_ip():
-            num = 1
-            ips = ['new ip','second new ip']
+            if found == False:
+                found_ips.append(ip)
+                print("found ip: " + str(ip))
+                turbo.push(turbo.replace(render_template('foundips.html'), 'found_ips'))
+            found = False
+    # time.sleep(3)
+    # with app.app_context():
+    #     turbo.push(turbo.replace(render_template('foundips.html'), 'found_ips'))
+    # print(found_ips)
 
-            while True:
-                print("testing rendering #" +str(num))
-                # env = Environment(
-                #     loader=FileSystemLoader('templates'),
-                #     autoescape=select_autoescape(['html', 'xml'])
-                # )
-                # template = env.get_template('testing.html')
-
-                ips.append(num)
-                yield render_template("testing.html", IPS=ips)
-                num = num + 1
-                time.sleep(2)
-
-        return Response(stream_with_context(print_ip()))
-
-    if request.method == 'GET':
-        return render_template("testing.html")
-    
-@app.route("/abc")
-def server_1():
-    def generate_output():
-        age = 0
-        template = '<p>{{ name }} is {{ age }} seconds old.</p>'
-        context = {'name': 'bob'}
-        while True:
-            context['age'] = age
-            yield render_template_string(template, **context)
-            time.sleep(5)
-            age += 5
-
-    return Response(stream_with_context(generate_output()))
-
-ip = "123"
-# sniff(filter="src 2a10:8003:43a0:0:9ac8:d870:5d89:32c0", prn=printer(ip)) 
+def start_sniff():
+    print("listening traffic on 192.168.1.20")
+    sniff(filter="ip dst 192.168.1.20", prn=analyze_pkt)

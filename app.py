@@ -1,13 +1,9 @@
-from flask import Flask
-from flask import render_template, request, jsonify, get_template_attribute, Response, stream_with_context, render_template_string
+from flask import Flask, render_template, Blueprint, request
 from anti_virus import add_ip, get_ips
 from scapy.all import *
 from scapy.layers.inet import IP
-from testing import jinja2_render_test
 from turbo_flask import Turbo
-import threading
 
-## start with sudo flask run!
 
 app = Flask(__name__)
 turbo = Turbo(app)
@@ -18,11 +14,6 @@ found_ips = []
 def inject_load():
     return {'IPS': found_ips}
 
-# @app.before_first_request
-# def before_first_request():
-    # threading.Thread(target=start_sniff).start()
-
-
 @app.route("/")
 def hello_world():
     return render_template("home.html")
@@ -32,7 +23,7 @@ def hello_world():
 def listen():
     if request.method == 'POST':
         start_sniff()
-    return render_template("listen.html") # currently showing all ipsm
+    return render_template("listen.html")
 
 @app.route("/config", methods=['GET', 'POST'])
 def config():
@@ -52,6 +43,14 @@ def list_ips():
     print(ips)
     return (str(ips))
 
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/signup')
+def signup():
+    return render_template('signup.html')
+
 def analyze_pkt(pkt):
     src_ip = pkt[IP].src
     ips = get_ips()
@@ -68,10 +67,6 @@ def analyze_pkt(pkt):
                 print("found ip: " + str(ip))
                 turbo.push(turbo.replace(render_template('foundips.html'), 'found_ips'))
             found = False
-    # time.sleep(3)
-    # with app.app_context():
-    #     turbo.push(turbo.replace(render_template('foundips.html'), 'found_ips'))
-    # print(found_ips)
 
 def start_sniff():
     print("listening traffic on 192.168.1.20")

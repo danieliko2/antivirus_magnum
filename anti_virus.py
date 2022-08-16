@@ -1,12 +1,7 @@
 import csv
-from urllib import response
-from scapy.all import *
-from scapy.layers.inet import IP
-from flask import get_template_attribute, render_template, Response, stream_with_context
-import time
-import multiprocessing as mp
-from turbo_flask import Turbo
+from flask import Blueprint
 
+anti_virus = Blueprint('anti_virus', __name__)
 
 def add_ip(ipData):
     with open("data/data.csv", "a") as f:
@@ -18,8 +13,6 @@ def get_ips():
         csvRead = csv.reader(f)
         rows = list(csvRead)
         return rows
-
-print("")
 
 
     # def analyze_pkt(pkt):
@@ -58,4 +51,3 @@ print("")
 
     # time.sleep(1)
     # update_template()
-

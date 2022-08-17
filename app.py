@@ -3,11 +3,12 @@ from anti_virus import add_ip, get_ips
 from scapy.all import *
 from scapy.layers.inet import IP
 from turbo_flask import Turbo
-
+from app_forms import LoginForm
+from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
 turbo = Turbo(app)
-
+Bootstrap(app)
 found_ips = []
 
 @app.context_processor  
@@ -45,7 +46,8 @@ def list_ips():
 
 @app.route('/login')
 def login():
-    return render_template('login.html')
+    form = LoginForm()
+    return render_template('login.html', form)
 
 @app.route('/signup')
 def signup():

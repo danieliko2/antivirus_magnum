@@ -1,14 +1,25 @@
-from flask import Flask, render_template, Blueprint, request
+from flask import Flask, render_template, Blueprint, request, redirect, url_for
 from anti_virus import add_ip, get_ips
 from scapy.all import *
 from scapy.layers.inet import IP
 from turbo_flask import Turbo
-from app_forms import LoginForm
+from app_forms import LoginForm, RegisterForm
 from flask_bootstrap import Bootstrap
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = "appkeys88!"
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/john/Desktop/antivirus_project/database.db'
+
 turbo = Turbo(app)
 Bootstrap(app)
+db = SQLAlchemy(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
 found_ips = []
 
 @app.context_processor  
@@ -21,6 +32,7 @@ def hello_world():
 
 
 @app.route("/listen", methods=['GET', 'POST'])
+@login_required
 def listen():
     if request.method == 'POST':
         start_sniff()
@@ -44,14 +56,37 @@ def list_ips():
     print(ips)
     return (str(ips))
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    return render_template('login.html', form)
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user:
+            if check_password_hash(user.password, form.password.data):
+                login_user(user, remember=form.remember.data)
+                return redirect(url_for("listen"))
+        # return '<h1>' + form.username.data + " " + form.password.data + "</h1>"
+        return '<h1> invalid username or password </h1>'
+    return render_template('login.html', form=form)
 
-@app.route('/signup')
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    return render_template('signup.html')
+    form = RegisterForm()
+    if form.validate_on_submit():
+        hashed_password = generate_password_hash(form.password.data, method='sha256')
+        new_user = User(username=form.username.data, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+        return '<h1> new user has been created </h1>'
+        # return '<h1>' + form.username.data + " " + form.password.data + "</h1>"
+
+    return render_template('signup.html', form=form)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return "logged out"
 
 def analyze_pkt(pkt):
     src_ip = pkt[IP].src
@@ -73,3 +108,12 @@ def analyze_pkt(pkt):
 def start_sniff():
     print("listening traffic on 192.168.1.20")
     sniff(filter="ip dst 192.168.1.20", prn=analyze_pkt)
+
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(15), unique=True)
+    password = db.Column(db.String(80))
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))

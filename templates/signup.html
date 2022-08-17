@@ -1,11 +1,20 @@
 
 {% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block content %}
 <div style="color:#fff;background:#c1502e; height: 300px; width: 230px; padding: 5px; border:2px; border-color: black; border-style:solid;">
-    <p>signup</p>
+    <div>
+        <form class="signup" method="POST" action="/signup">
+            <p>Sign Up</p>
 
-    <br>
+            {{ form.hidden_tag() }}
+            {{ wtf.form_field(form.username) }}
+            {{ wtf.form_field(form.password) }}
+
+            <button class="signup" type="submit">Sign Up</button>
+        </form>
+    </div>
     <a href="listen">listen</a>
     <a href="config">config</a>
 </div>

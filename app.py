@@ -88,6 +88,11 @@ def logout():
     logout_user()
     return "logged out"
 
+@app.route("/about")
+def about():
+    return render_template('about.html')
+
+
 def analyze_pkt(pkt):
     src_ip = pkt[IP].src
     ips = get_ips()

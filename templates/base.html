@@ -21,8 +21,30 @@
     <br>
     <div class="h- 100"></div>
     <div class="h-100 d-flex align-items-center justify-content-center">
-        {% block content %}
+
+        <div style="color:#fff;background:#c1502e; height: 450px; width: 400px; padding: 5px; border:2px; border-color: black; border-style:solid;">
+            <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #c1502e;">                
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                  <div class="navbar-nav">
+                    <a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-item nav-link" href="listen">Listen</a>
+                    <a class="nav-item nav-link" href="list_ips">IP list</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="nav-item nav-link"  style="font-size: 12px !important" href="login">Log In</a>
+                    <a class="nav-item nav-link" style="font-size: 12px !important" href="signup">Sign Up</a>
+                  </div>
+                </div>
+              </nav>
+            {% block content %}
+            {% endblock %}
+        </div>
+        {% block ipscontent %}
         {% endblock %}
+
+    </div>
+        <footer class = "d-flex align-items-center justify-content-center">
+            <a>in development</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="about" style="color: black">about</a>
+        </footer>
     </div>
 </body>
 </html>

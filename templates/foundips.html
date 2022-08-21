@@ -1,16 +1,18 @@
-    <tbody id="found_ips">
-        <tr>
-            <th scope="row">192.196.20.1</th>
-            <td>1</td>
-            <td>testing ip</td>
-        </tr>
+{% block content %}
+<tbody id="found_ips">
+    <tr>
+        <th scope="row">192.196.20.1</th>
+        <td>1</td>
+        <td>testing ip</td>
+    </tr>
 
-        {% for row in IPS %}
-        <tr>
-        <th scope="row">{{row.0}}</th>
-        <td>{{row.1}}</td>
-        <td>{{row.2}}</td>
-        </tr>
-        {% endfor %}
+    {% for row in IPS %}
+    <tr>
+    <th scope="row">{{row.0}}</th>
+    <td>{{row.1}}</td>
+    <td>{{row.2}}</td>
+    </tr>
+    {% endfor %}
 
-    </tbody>
+</tbody>
+{% endblock %}

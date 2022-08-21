@@ -27,9 +27,12 @@ def inject_load():
     return {'IPS': found_ips}
 
 @app.route("/")
-def hello_world():
+def home():
     return render_template("home.html")
 
+@app.route("/home")
+def home2():
+    return render_template("home.html")
 
 @app.route("/listen", methods=['GET', 'POST'])
 @login_required
@@ -39,6 +42,7 @@ def listen():
     return render_template("listen.html")
 
 @app.route("/config", methods=['GET', 'POST'])
+@login_required
 def config():
     if request.method == 'POST':
         ipA = request.form['ipAdr']
@@ -54,7 +58,7 @@ def config():
 def list_ips():
     ips = get_ips()
     print(ips)
-    return (str(ips))
+    return render_template("ip_list.html", IPS=ips)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -64,9 +68,10 @@ def login():
         if user:
             if check_password_hash(user.password, form.password.data):
                 login_user(user, remember=form.remember.data)
-                return redirect(url_for("listen"))
+                return redirect(url_for("home"))
         # return '<h1>' + form.username.data + " " + form.password.data + "</h1>"
         return '<h1> invalid username or password </h1>'
+    print(current_user)
     return render_template('login.html', form=form)
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -86,7 +91,7 @@ def signup():
 @login_required
 def logout():
     logout_user()
-    return "logged out"
+    return render_template('home.html')
 
 @app.route("/about")
 def about():

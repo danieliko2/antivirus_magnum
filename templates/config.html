@@ -2,16 +2,16 @@
 
 {% block content %}
 
-<p>IPS</p>
-<a href="list_ips" id="list_ips">Show IPS</a> <br>
-<a id = "ips"></a>
-<form id = "add_ip" method="post">
-    <p>add ip address</p>
-    <input id="ipAdr" name="ipAdr" type="text" placeholder="IP Address" required><br>
-    <input id='riskN' name="riskN" type="number" min="1" max="5" placeholder="Risk factor (1=no risk, 5=high risk)" required><br>
-    <input id="comments" name="comments" type="text" placeholder="comments"><br>
-    <input type="submit" value="Submit">
-</form>
+<br>
+<div style="display: flex; justify-content: center;">
+    <form id = "add_ip" method="post" >
+        <p><b>Add IP to IP list</b></p>
+        <input id="ipAdr" name="ipAdr" type="text" placeholder="IP Address" required><br>
+        <input id='riskN' name="riskN" type="number" min="1" max="5" placeholder="Risk factor (1=no risk, 5=high risk)" required><br>
+        <input id="comments" name="comments" type="text" placeholder="comments"><br> <br>
+        <input type="submit" value="Submit">
+    </form>
+</div>
 <br>
 
 {% endblock %}
